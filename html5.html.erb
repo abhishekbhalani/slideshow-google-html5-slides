@@ -468,6 +468,70 @@
        
     </div> <!-- presentation -->
     
+	<!-- BEGIN ETM - APPENDTO -->
+	<link href="recipes.css" rel="stylesheet" />
+	<style>
+	pre {
+		font-family: Monaco, Courier New;
+		margin: 0 1em;
+		padding: 0.5em;
+		font-size: 24px;
+	}
+
+	pre.javascript, pre.html {
+		background: #000;
+		color: #fff;
+	}
+
+	pre.stocky {
+		width: 50%;
+		float: left;
+	}
+
+	pre a {
+		text-decoration: none;
+	}	
+	</style>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+	<script src="jquery.chili.js"></script> 
+	<script src="jquery.color.js"></script> 
+	<script src="recipes.js"></script> 
+	<script>
+	(function($) {
+		$("div.slide").each(function(index, item){
+			item.id = "slide" + index;
+		});
+		
+
+		$("pre").addClass("javascript").chili().html(function(i, html){
+			html = html.replace(/\$\.(<span class="method">([\w\$]+)<\/span>)\(/g, function( all, span, name ) {
+				name = name === "$" ? "jQuery" : name;
+				return "$.<a href='http://api.jquery.com/jQuery." + name + "'>" + span + "</a>(";
+			});
+
+			html = html.replace(/(<span class="method">([\w\$]+)<\/span>)\(/g, function( all, span, name ) {
+				name = name === "$" ? "jQuery" : name;
+				return "<a href='http://api.jquery.com/" + name + "'>" + span + "</a>(";
+			});
+
+			return html;
+		});		
+
+		var analyze = function() {
+			var slide = $(this).parents("div.slide");
+			var text = slide.find("pre").text();
+			text = text
+				.replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+				.replace(/&nbsp;/g, " ").replace(/\s/g, " ")
+				.replace(/(\$\("|appendTo\(")/g, "$1#" + slide.attr("id") + " ");
+			eval( text );
+		};
+
+		$("button.run").click(analyze);					
+	}(jQuery));
+	</script>
+	<!-- END ETM - APPENDTO -->
+
     <script> 
       (function() {
         // bail in IE
